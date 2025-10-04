@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 
 app = FastAPI()
 
-SELF_URL = "https://NOME-PROGETTO.vercel.app"  # <-- la metti dopo il deploy su Vercel
+SELF_URL = "https://uni-translator.vercel.app/"  # <-- la metti dopo il deploy su Vercel
 
 async def ping_self():
     ping_url = f"{SELF_URL}/ping"
