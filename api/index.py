@@ -1,13 +1,16 @@
 import asyncio
 import httpx
+import os
 from fastapi import FastAPI
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+import subprocess
 
 app = FastAPI()
 
-SELF_URL = "https://uni-translator.vercel.app"  # <-- tuo URL Vercel
+SELF_URL = "https://uni-translator.vercel.app"
 
-# ------------------------ Async Self-Pinging System --------------------------------#
+bot_process = None  # global
+
 async def ping_self():
     ping_url = f"{SELF_URL}/ping"
     try:
@@ -25,12 +28,20 @@ async def schedule_ping():
         print(f"🌐 Ping at {datetime.now()}")
         await ping_self()
         await asyncio.sleep(600)  # ogni 10 minuti
-# -----------------------------------------------------------------------------------#
 
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(schedule_ping())
+    start_bot()  # avvia il bot
+
+def start_bot():
+    global bot_process
+    if bot_process is None:
+        print("🚀 Avvio bot Discord...")
+        bot_process = subprocess.Popen(["python3", "main.py"])
+    else:
+        print("🟢 Bot già in esecuzione")
 
 @app.get("/ping")
 async def ping():
-    return {"message": "Server awake!"}
+    return {"message": "Server awake & bot running"}
