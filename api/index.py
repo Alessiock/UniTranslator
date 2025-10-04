@@ -1,12 +1,13 @@
 import asyncio
 import httpx
 from fastapi import FastAPI
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 
 app = FastAPI()
 
-SELF_URL = "https://uni-translator.vercel.app/"  # <-- la metti dopo il deploy su Vercel
+SELF_URL = "https://uni-translator.vercel.app"  # <-- tuo URL Vercel
 
+# ------------------------ Async Self-Pinging System --------------------------------#
 async def ping_self():
     ping_url = f"{SELF_URL}/ping"
     try:
@@ -24,6 +25,7 @@ async def schedule_ping():
         print(f"🌐 Ping at {datetime.now()}")
         await ping_self()
         await asyncio.sleep(600)  # ogni 10 minuti
+# -----------------------------------------------------------------------------------#
 
 @app.on_event("startup")
 async def startup_event():
